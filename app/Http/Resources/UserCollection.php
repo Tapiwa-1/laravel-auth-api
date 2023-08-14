@@ -18,7 +18,7 @@ class UserCollection extends ResourceCollection
             return [
                 'id' => $user->id,
                 'name' => $user->name,
-                'bio' => $user->bio,
+                'email' => $user->email,
                 'image' => url('/') . $user->image,
                 'created_at' => $user->created_at,
                 'updated_at' => $user->updated_at,
