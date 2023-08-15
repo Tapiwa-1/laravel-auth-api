@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PasswordUpdateRequest;
 use App\Http\Resources\ProfileDeleteRequest;
 use App\Http\Resources\ProfileUpdateRequest;
 use App\Http\Resources\UserCollection;
@@ -10,6 +11,8 @@ use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class ProfileController extends Controller
 {
@@ -58,6 +61,24 @@ class ProfileController extends Controller
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }
+     /**
+     * Update the user's password.
+     */
+    public function updatePassword(PasswordUpdateRequest $request)
+    {
+        try {
+            $validated = $request->validated();
+            $request->user()->update([
+                'password' => Hash::make($validated['password']),
+            ]);
+            
+            return response()->json([
+                'success' => 'OK',
+            ], 200);
+        }catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
     /**
      * Delete the user's account.
      */
@@ -74,6 +95,6 @@ class ProfileController extends Controller
             ], 200);
         }catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
-    }
+        }
     }
 }
